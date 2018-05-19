@@ -14,6 +14,10 @@ public class User {
         this.nickname = email;
     }
 
+    public User () {
+
+    }
+
     public String getProfile() {
         return profile;
     }

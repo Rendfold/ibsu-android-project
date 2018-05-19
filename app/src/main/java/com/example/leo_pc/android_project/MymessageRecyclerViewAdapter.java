@@ -71,6 +71,7 @@ public class MymessageRecyclerViewAdapter extends RecyclerView.Adapter<Mymessage
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mContentView.setText(mValues.get(position).getMessage());
         holder.mMessageTime.setText(dateFormat.format(mValues.get(position).getCreatedAt()));
+        holder.mMessageSender.setText(mValues.get(position).getSender().getNickname());
     }
 
     @Override
@@ -83,6 +84,7 @@ public class MymessageRecyclerViewAdapter extends RecyclerView.Adapter<Mymessage
         public final View mView;
         public final TextView mContentView;
         public final TextView mMessageTime;
+        public final TextView mMessageSender;
 
         public ViewHolder(View view) {
             super(view);
@@ -90,6 +92,7 @@ public class MymessageRecyclerViewAdapter extends RecyclerView.Adapter<Mymessage
 
             mContentView = (TextView) view.findViewById(R.id.text_message_body);
             mMessageTime = (TextView) view.findViewById(R.id.text_message_time);
+            mMessageSender = (TextView) view.findViewById(R.id.name);
         }
 
         @Override

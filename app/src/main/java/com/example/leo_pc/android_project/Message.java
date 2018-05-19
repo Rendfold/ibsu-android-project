@@ -22,6 +22,9 @@ public class Message {
         this.createdAt = createdAt;
     }
 
+    public Message(){
+    }
+
     public String getMessage() {
         return message;
     }
