@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
         final Button goToMapBttn = findViewById(R.id.goToMapBttn);
         final Button goToChatBttn = findViewById(R.id.goToChatBttn);
+        final Button goToGameBttn = findViewById(R.id.goToGameBttn);
 
         goToMapBttn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -33,6 +34,13 @@ public class MainActivity extends AppCompatActivity {
         goToChatBttn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, chat.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
+
+        goToGameBttn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Game.class);
                 MainActivity.this.startActivity(intent);
             }
         });

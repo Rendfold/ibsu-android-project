@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -13,6 +14,8 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -28,18 +31,21 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapClickListener, OnMapReadyCallback, OnMarkerClickListener {
     private GoogleMap mMap;
     private Boolean mLocationPermissionGranted;
     private static final String[] INITIAL_PERMS={
             Manifest.permission.ACCESS_FINE_LOCATION
     };
     private static final int INITIAL_REQUEST=1337;
+    boolean markerClicked;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -50,6 +56,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
 
         final Button searchBttn = findViewById(R.id.searchBttn);
 
@@ -62,6 +70,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (!canAccessLocation()) {
             requestPermissions(INITIAL_PERMS, INITIAL_REQUEST);
         }
+
+
     }
 
     private boolean canAccessLocation() {
@@ -82,6 +92,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (this.canAccessLocation()) {
             mMap.setMyLocationEnabled(true);
         }
+
+        mMap.setOnMarkerClickListener(this);
+        mMap.setOnMapClickListener(this);
+    }
+
+    @Override
+    public void onMapClick(LatLng point) {
+        markerClicked = false;
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        if(markerClicked){
+            Intent intent = new Intent(MapsActivity.this, chat.class);
+            MapsActivity.this.startActivity(intent);
+        }else{
+            markerClicked = true;
+        }
+
+        return true;
     }
 
     public void onSearch(View v) {
@@ -101,7 +131,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 LatLng latLng = new LatLng(address.getLatitude() , address.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-
+                mMap.animateCamera(CameraUpdateFactory.zoomIn());
             }
         }
     }
